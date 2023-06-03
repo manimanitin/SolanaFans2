@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { ShyftSdk, Network } from '@shyft-to/js';
-
+import { Connection, clusterApiUrl, Keypair ,Transaction} from '@solana/web3.js';
 
 const Menu = () => {
     const [publicKey, setpublicKey] = useState();
@@ -35,14 +35,46 @@ const Menu = () => {
 
     const createNFT = async () => {
         const shyft = new ShyftSdk({ apiKey: 'WX4VcrI-W7FsTbXV', network: Network.Devnet });
-        const nft = await shyft.nft.createV2({ network: Network.Devnet, creatorWallet: publicKey, data: selectedFile });
+        const nft = await shyft.nft.createV2({ network: Network.Devnet, creatorWallet: publicKey, image: selectedFile });
         setNft(nft);
+
+        const provider = window?.phantom?.solana;
+        const { solana } = window;
+
+        if (!provider?.isPhantom || !solana.isPhantom) {
+            toast.error('Phantom no esta instalado');
+            setTimeout(() => {
+                window.open('http://phantom.app', "_blank");
+            }, 2000);
+            return;
+        }
+
+
+        let phantom;
+        if (provider?.isPhantom) phantom = provider;
+        const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+        confirmTransactionFromFrontend(connection, nft.encoded_transaction, provider);
+        console.log(nft);
     };
     const handleFileChange = (e) => {
         if (e.target.files) {
             setSelectedFile(e.target.files[0]);
         }
     };
+
+    async function confirmTransactionFromFrontend(connection, encodedTransaction, wallet)  //function for signing transactions using the wallet for one signer
+    {
+        console.log(encodedTransaction);
+        const recoveredTransaction = Transaction.from(
+            Buffer.from(encodedTransaction, 'base64')
+        );
+        const signedTx = await wallet.signTransaction(recoveredTransaction);
+        const confirmTransaction = await connection.sendRawTransaction(
+            signedTx.serialize()
+        );
+        return confirmTransaction;
+    };
+
 
 
     return (
@@ -69,9 +101,13 @@ const Menu = () => {
                     </div>
 
                 ) : (
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => { wallet(); }}>
-                        Conecta tu wallet
-                    </button>
+                    <div>
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => { wallet(); }}>
+                            Conecta tu wallet
+                        </button>
+
+
+                    </div>
                 )}
             </div>
         </>);
