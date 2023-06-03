@@ -3,14 +3,17 @@ import axios from 'axios';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { ShyftSdk, Network } from '@shyft-to/js';
+import { useRouter } from 'next/navigation';
+
+
 const Home = () => {
   const [Wallet, setWallet] = useState();
   const [publicKey, setpublicKey] = useState();
+  const router = useRouter();
 
   const prueba = async () => {
     const provider = window?.phantom?.solana;
     const { solana } = window;
-
 
     if (!provider?.isPhantom || !solana.isPhantom) {
       toast.error('Phantom no esta instalado');
@@ -28,7 +31,6 @@ const Home = () => {
     setpublicKey(publicKey.toString());
 
     toast.success('Tu wallet esta conectada 👾');
-    console.log(process.env.shyftkey);
     const shyft = new ShyftSdk({ apiKey: 'WX4VcrI-W7FsTbXV', network: Network.Devnet });
     const balance = await shyft.wallet.getBalance({ wallet: publicKey.toString() });
     console.log(balance);
@@ -41,10 +43,10 @@ const Home = () => {
         <p className="text-xl text-gray-700">
           Bienvenidos a Solanafans, la comunidad dedicada a Solana.
         </p>
-        <button className='bg-red-500 rounded-bl-lg text-lg' onClick={() => prueba()}>
+        <button className='bg-red-500 rounded-bl-lg text-lg' onClick={() => router.push('/menu')}>
           Iniciar
         </button>
-      </div>
+      </div >
     </>
   );
 };
