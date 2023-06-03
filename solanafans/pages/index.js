@@ -2,9 +2,10 @@ import Image from 'next/image';
 import axios from 'axios';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { ShyftSdk, Network } from '@shyft-to/js';
 const Home = () => {
   const [Wallet, setWallet] = useState();
-  const [llave, setpublicKey] = useState();
+  const [publicKey, setpublicKey] = useState();
 
   const prueba = async () => {
     const provider = window?.phantom?.solana;
@@ -27,10 +28,10 @@ const Home = () => {
     setpublicKey(publicKey.toString());
 
     toast.success('Tu wallet esta conectada 👾');
-
-    /*await  axios.get('/api/shyft', { publicKey: llave }).then((res) => {
-        console.log(res);
-      });*/
+    console.log(process.env.shyftkey);
+    const shyft = new ShyftSdk({ apiKey: 'WX4VcrI-W7FsTbXV', network: Network.Devnet });
+    const balance = await shyft.wallet.getBalance({ wallet: publicKey.toString() });
+    console.log(balance);
   };
 
   return (

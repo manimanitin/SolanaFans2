@@ -3,6 +3,8 @@ import axios from 'axios';
 export default async function handler(req, res) {
     try {
         // Realizar la llamada a la API de Shyft
+
+        
         console.log(req.publicKey?req.publicKey:'valio');
         const response = await axios.get(`https://api.shyft.to/sol/v1/wallet/balance?network=testnet&wallet=${req.publicKey}`, { "x-api-key": process.env.shyftkey });
         // Procesar la respuesta de la API de Shyft
