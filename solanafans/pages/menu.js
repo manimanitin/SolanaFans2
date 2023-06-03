@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { ShyftSdk, Network } from '@shyft-to/js';
 
@@ -7,6 +7,7 @@ const Menu = () => {
     const [publicKey, setpublicKey] = useState();
     const [balance, setBalance] = useState();
     const [selectedFile, setSelectedFile] = useState(null);
+    const [nft, setNft] = useState();
     const wallet = async () => {
         const provider = window?.phantom?.solana;
         const { solana } = window;
@@ -32,11 +33,17 @@ const Menu = () => {
         setBalance(balance);
     };
 
-    const createNFT = async (props) => {
+    const createNFT = async () => {
         const shyft = new ShyftSdk({ apiKey: 'WX4VcrI-W7FsTbXV', network: Network.Devnet });
-        const nft = await shyft.nft.createV2({ network: Network.Devnet, creatorWallet: publicKey, data: props.data });
+        const nft = await shyft.nft.createV2({ network: Network.Devnet, creatorWallet: publicKey, data: selectedFile });
+        setNft(nft);
     };
-    
+    const handleFileChange = (e) => {
+        if (e.target.files) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
 
     return (
         <>
@@ -52,9 +59,9 @@ const Menu = () => {
                         </h1>
                         <h2 className='text-2xl'>Abre una imagen</h2>
                         <input
-                            type='image'
+                            type='file'
                             id='fileInput'
-                            onChange={setSelectedFile(event.target.files[0])}
+                            onChange={handleFileChange}
                         />
                         <button className='bg-lime-500 hover:rounded-lg rounded-full text-lg' onClick={() => { createNFT(); }}>
                             🎇Aqui!

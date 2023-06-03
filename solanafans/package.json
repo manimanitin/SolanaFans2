@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@shyft-to/js": "^0.2.13",
+    "@solana/wallet-adapter-react-ui": "^0.9.31",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
     "lodash": "^4.17.21",
