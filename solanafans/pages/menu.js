@@ -6,6 +6,7 @@ import { ShyftSdk, Network } from '@shyft-to/js';
 const Menu = () => {
     const [publicKey, setpublicKey] = useState();
     const [balance, setBalance] = useState();
+    const [selectedFile, setSelectedFile] = useState(null);
     const wallet = async () => {
         const provider = window?.phantom?.solana;
         const { solana } = window;
@@ -31,6 +32,11 @@ const Menu = () => {
         setBalance(balance);
     };
 
+    const createNFT = async (props) => {
+        const shyft = new ShyftSdk({ apiKey: 'WX4VcrI-W7FsTbXV', network: Network.Devnet });
+        const nft = await shyft.nft.createV2({ network: Network.Devnet, creatorWallet: publicKey, data: props.data });
+    };
+    
 
     return (
         <>
@@ -38,10 +44,21 @@ const Menu = () => {
                 <h1 className="text-4xl font-bold mb-8">Primeros Pasos</h1>
 
                 {balance ? (
-                    <div className="">
-                        <h1>💰Balance Actual💰</h1>
-                        <p>{balance}</p>
-
+                    <div className="text-3xl">
+                        <h1 >💰Balance Actual💰</h1>
+                        <p>{balance}☀</p>
+                        <h1 className='text-3xl'>
+                            Crea tu propio NFT
+                        </h1>
+                        <h2 className='text-2xl'>Abre una imagen</h2>
+                        <input
+                            type='image'
+                            id='fileInput'
+                            onChange={setSelectedFile(event.target.files[0])}
+                        />
+                        <button className='bg-lime-500 hover:rounded-lg rounded-full text-lg' onClick={() => { createNFT(); }}>
+                            🎇Aqui!
+                        </button>
                     </div>
 
                 ) : (
