@@ -12,9 +12,11 @@ import NFTTable from '@/components/tablaNFT';
 const Menu = () => {
     const [publicKey, setpublicKey] = useState(null);
     const [balance, setBalance] = useState();
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [imagen, setImagen] = useState(null);
     const [nft, setNft] = useState();
     const [nftCollection, setNftCollection] = useState([]);
+    const [nombre, setNombre] = useState('');
+    const [descripcion, setDescripcion] = useState('');
 
     useEffect(() => {
         console.log(nftCollection);
@@ -24,7 +26,7 @@ const Menu = () => {
             console.log(nftCollection);
         }
 
-    }, [balance]);
+    }, [balance, nft]);
 
     const wallet = async () => {
         const provider = window?.phantom?.solana;
@@ -81,9 +83,11 @@ const Menu = () => {
         const nft = await shyft.nft.createV2({
             network: Network.Devnet,
             creatorWallet: publicKey,
-            image: selectedFile,
+            image: imagen,
+            name: nombre,
+            description: descripcion
+
         });
-        setNft(nft);
 
         const provider = window?.phantom?.solana;
         const { solana } = window;
@@ -104,12 +108,32 @@ const Menu = () => {
             nft.encoded_transaction,
             provider
         );
-        console.log(nft);
+        setNft(nft);
+
+        setDescripcion('');
+        setNombre('');
+        setImagen(null);
     };
-    const handleFileChange = (e) => {
+    const handleImagenChange = (e) => {
         if (e.target.files) {
-            setSelectedFile(e.target.files[0]);
+            setImagen(e.target.files[0]);
         }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Aquí puedes realizar acciones con los datos del formulario, como enviarlos a una API
+        createNFT();
+
+        console.log(nombre, descripcion, imagen);
+        // ...
+    };
+    const handleNombreChange = (e) => {
+        setNombre(e.target.value);
+    };
+
+    const handleDescripcionChange = (e) => {
+        setDescripcion(e.target.value);
     };
 
     async function confirmTransactionFromFrontend(
@@ -142,17 +166,41 @@ const Menu = () => {
                         <h1>💰Balance Actual💰</h1>
                         <p>{balance}☀</p>
                         <h1 className="text-3xl">Crea tu propio NFT</h1>
-                        <h2 className="text-2xl">Abre una imagen</h2>
-                        <input type="file" id="fileInput" onChange={handleFileChange} />
-                        <button
-                            className="bg-lime-500 hover:rounded-lg rounded-full text-lg"
-                            onClick={() => {
-                                createNFT();
-                            }}
-                        >
-                            🎇Aqui!
-                        </button>
 
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-4 text-gray-950" >
+                                <label htmlFor="nombre" className="block text-gray-100 font-bold mb-1">Nombre:</label>
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    className="w-full px-3 py-2 border border-gray-800 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                                    value={nombre}
+                                    onChange={handleNombreChange}
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4  text-gray-950">
+                                <label htmlFor="descripcion" className="block text-gray-100 font-bold mb-1">Descripción:</label>
+                                <textarea
+                                    id="descripcion"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500"
+                                    value={descripcion}
+                                    onChange={handleDescripcionChange}
+                                    required
+                                ></textarea>
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="imagen" className="block text-gray-100 font-bold mb-1">Imagen:</label>
+                                <input
+                                    type="file"
+                                    id="imagen"
+                                    className="border border-gray-300 rounded px-3 py-2"
+                                    onChange={handleImagenChange}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Enviar</button>
+                        </form>
                         <div>
                             <br />
                             {nftCollection.length > 0 && (

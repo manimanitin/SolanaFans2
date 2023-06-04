@@ -42,7 +42,7 @@ const Home = () => {
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-500">
         <h1 className="text-4xl font-bold mb-4">SolanaFans</h1>
         <p className="text-xl text-gray-700">
-          Bienvenidos a Solanafans, la comunidad dedicada a Solana.
+          Bienvenidos a Solanafans, la comunidad dedicada a NFTs.
         </p>
         <button className='bg-red-500 rounded-bl-lg text-lg' onClick={() => router.push('/menu')}>
           Iniciar
