@@ -7,19 +7,24 @@ import {
     Keypair,
     Transaction,
 } from "@solana/web3.js";
+import Header from '@/components/header';
 
 const Menu = () => {
-    const [publicKey, setpublicKey] = useState();
+    const [publicKey, setpublicKey] = useState(null);
     const [balance, setBalance] = useState();
     const [selectedFile, setSelectedFile] = useState(null);
     const [nft, setNft] = useState();
     const [nftCollection, setNftCollection] = useState([]);
 
     useEffect(() => {
-        if (publicKey) {
+        console.log(nftCollection);
+
+        if (publicKey!=null) {
             fetchNftCollection();
+            console.log(nftCollection);
         }
-    }, []);
+
+    }, [publicKey]);
 
     const wallet = async () => {
         const provider = window?.phantom?.solana;
@@ -48,6 +53,7 @@ const Menu = () => {
             wallet: publicKey.toString(),
         });
         setBalance(balance);
+
     };
 
     const fetchNftCollection = async () => {
@@ -126,7 +132,9 @@ const Menu = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center h-screen">
+            <Header />
+            <div className="flex flex-col items-center justify-center">
+
                 <h1 className="text-4xl font-bold mb-8">Primeros Pasos</h1>
 
                 {balance ? (

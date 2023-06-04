@@ -4,7 +4,7 @@ import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { ShyftSdk, Network } from '@shyft-to/js';
 import { useRouter } from 'next/navigation';
-
+import Header from '@/components/header';
 
 const Home = () => {
   const [Wallet, setWallet] = useState();
