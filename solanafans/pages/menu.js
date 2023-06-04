@@ -19,11 +19,9 @@ const Menu = () => {
     const [descripcion, setDescripcion] = useState('');
     const [confirm, setConfirm] = useState();
     useEffect(() => {
-        console.log(nftCollection);
 
         if (publicKey != null) {
             fetchNftCollection();
-            console.log(nftCollection);
         }
 
     }, [balance, confirm]);
@@ -43,7 +41,6 @@ const Menu = () => {
         let phantom;
         if (provider?.isPhantom) phantom = provider;
         const { publicKey } = await phantom.connect();
-        console.log("public key:", publicKey.toString());
         setpublicKey(publicKey.toString());
 
         toast.success("Tu wallet esta conectada 👾");
@@ -69,7 +66,6 @@ const Menu = () => {
                 owner: publicKey,
             });
             setNftCollection(collection);
-            console.log(collection);
         } catch (error) {
             console.error("Error al obtener la colección de NFTs:", error);
         }
@@ -103,12 +99,11 @@ const Menu = () => {
         let phantom;
         if (provider?.isPhantom) phantom = provider;
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-        setConfirm(confirmTransactionFromFrontend(
+        confirmTransactionFromFrontend(
             connection,
             nft.encoded_transaction,
             provider
-        ));
-        console.log(confirm.value)
+        );
         setNft(nft);
 
         setDescripcion('');
@@ -126,7 +121,6 @@ const Menu = () => {
         // Aquí puedes realizar acciones con los datos del formulario, como enviarlos a una API
         createNFT();
 
-        console.log(nombre, descripcion, imagen);
         // ...
     };
     const handleNombreChange = (e) => {
@@ -143,7 +137,6 @@ const Menu = () => {
         wallet
     ) {
         //function for signing transactions using the wallet for one signer
-        console.log(encodedTransaction);
         const recoveredTransaction = Transaction.from(
             Buffer.from(encodedTransaction, "base64")
         );
@@ -151,7 +144,7 @@ const Menu = () => {
         const confirmTransaction = await connection.sendRawTransaction(
             signedTx.serialize()
         );
-        console.log(confirmTransaction);
+        setConfirm(confirmTransaction);
         return confirmTransaction;
     }
 
