@@ -8,7 +8,7 @@ import {
     Transaction,
 } from "@solana/web3.js";
 import Header from '@/components/header';
-
+import NFTTable from '@/components/tablaNFT';
 const Menu = () => {
     const [publicKey, setpublicKey] = useState(null);
     const [balance, setBalance] = useState();
@@ -19,12 +19,12 @@ const Menu = () => {
     useEffect(() => {
         console.log(nftCollection);
 
-        if (publicKey!=null) {
+        if (publicKey != null) {
             fetchNftCollection();
             console.log(nftCollection);
         }
 
-    }, [publicKey]);
+    }, [balance]);
 
     const wallet = async () => {
         const provider = window?.phantom?.solana;
@@ -158,20 +158,9 @@ const Menu = () => {
                             {nftCollection.length > 0 && (
                                 <div>
                                     <h2>Tu colección de NFTs:</h2>
-                                    <ul>
-                                        {nftCollection.map((nft) => (
-                                            <li key={nft.tokenId}>
-                                                <img
-                                                    src={nft.cached_image_uri}
-                                                    alt={nft.image_uri}
-                                                    style={{ maxWidth: "200px" }}
-                                                />
-                                                <p>{nft.key}</p>
-                                            </li>
+                                    <NFTTable nfts={nftCollection} />
 
-                                        ))}
 
-                                    </ul>
                                 </div>
                             )}
                         </div>
