@@ -17,7 +17,7 @@ const Menu = () => {
     const [nftCollection, setNftCollection] = useState([]);
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
-
+    const [confirm, setConfirm] = useState();
     useEffect(() => {
         console.log(nftCollection);
 
@@ -26,7 +26,7 @@ const Menu = () => {
             console.log(nftCollection);
         }
 
-    }, [balance, nft]);
+    }, [balance, confirm]);
 
     const wallet = async () => {
         const provider = window?.phantom?.solana;
@@ -103,11 +103,12 @@ const Menu = () => {
         let phantom;
         if (provider?.isPhantom) phantom = provider;
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-        confirmTransactionFromFrontend(
+        setConfirm(confirmTransactionFromFrontend(
             connection,
             nft.encoded_transaction,
             provider
-        );
+        ));
+        console.log(confirm.value)
         setNft(nft);
 
         setDescripcion('');
